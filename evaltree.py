@@ -28,9 +28,8 @@ def page_not_found(e):
     return render_template('500.html'), 500
 	
 if __name__ == '__main__':
-  app.run( 
-        host="127.0.0.1",
-        port=int("5000")
-  )
+  #app.run(host="127.0.0.1",port=int("5000")
+  app.run(debug=True, port=33507)
+)
 
 
