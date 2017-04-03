@@ -1,1 +1,1 @@
-web: python evaltree.py 
+web: gunicorn evaltree:app
