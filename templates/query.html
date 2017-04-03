@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}
+	EvalTree Visualizer -- Welcome
+{%  endblock %}
+{% block scripting %}		
+		{% macro display(tree) %} {	
+			'text':'{{tree}}',
+			'x':{{tree.x}},
+			'y':{{tree.y}}{% if tree.children %},
+			'children':[{% for item in tree.children[:-1] %}{{ display(item) }},{% endfor %}	
+					 {% if tree.children %}{{ display(tree.children[-1]) }}{% endif %}]						  
+			{% endif %}
+		}{% endmacro %}
+
+		var tree_structure = {{ display(tree) }}
+		
+		var radius = 30;	// how big the circle is
+		var space_mult = 5.0;	// how far apart each node is from one another
+		var text_px = radius - 10;	// size of the text within the circles
+		var edge_offset = radius + 20; // offset from the edge of canvas to avoid obscurity
+		var rh = radius * space_mult;
+		var rw = radius * space_mult;		
+			
+		var canvas = document.getElementById('myCanvas');
+		var context = canvas.getContext('2d');
+		context.font = 'italic 40pt Calibri, sans-serif';
+		var left_leaf_node = getLeftMostLeaf(tree_structure);
+		var right_leaf_node = getRightMostLeaf(tree_structure);
+		var scale = 0.9; //setScale(tree_structure);
+		
+		function getLeftMostLeaf(tree_node) {					
+			while(tree_node['children'][0]['children'] != null) {
+				tree_node = tree_node['children'][0];
+			}
+			return tree_node['children'][0];
+		}
+		
+		function getRightMostLeaf(tree_node) {
+			while(tree_node['children'][tree_node['children'].length - 1]['children'] != null) {
+				tree_node = tree_node['children'][tree_node['children'].length - 1];
+			}
+			return tree_node['children'][tree_node['children'].length - 1];
+		}
+		
+		function setScale(tree_node) {
+			var number_of_levels = 0;
+			while(tree_node['children'] != null) {
+				tree_node = tree_node['children'][0];
+				number_of_levels += 1.0;
+			}
+			return (1.0 - (number_of_levels * 0.1));
+		}
+		
+		
+		$(document).ready(function() {			
+			var actual_canvas_width = (right_leaf_node.x * rw) - (left_leaf_node.x * rw);
+			canvas.width = (actual_canvas_width * scale) + edge_offset + radius;// * scale;
+			canvas.height = (left_leaf_node.y * rh + edge_offset + radius) + 20;  // $('#tree-container').height();
+			context.scale(scale, scale);
+			drawDiagram(tree_structure);
+			drawConn(tree_structure);							
+		});		
+		
+		function drawDiagram(tree_node) {
+			var text = tree_node['text'];			
+			var x = tree_node['x'];			
+			var y = tree_node['y'];
+			drawOval(x, y);
+			drawText(x, y, text)
+			for (var key in tree_node['children']){
+				drawDiagram(tree_node['children'][key]);				
+			}
+		}
+		
+			function drawOval(x, y) {			
+				context.fillStyle = "red";
+				context.beginPath();			  
+				context.arc( x * rw + edge_offset, y * rh + edge_offset, radius, 0, Math.PI * 2);
+				context.closePath();
+				context.fill();			
+			}
+			
+			function drawText(x, y, text) {
+				context.fillStyle = "black"; // font color to write the text with
+				context.font = "bold " + text_px + "px serif";
+				var width = context.measureText(text).width;
+				var height = radius;
+				context.fillText(text, (x * rw + edge_offset) - (width/2), (y * rh + edge_offset) + ((height / 2) - (text_px / 2)));
+			}
+		
+		function drawConn(tree_node) {
+			var text = tree_node['text'];			
+			var x = tree_node['x'];			
+			var y = tree_node['y'];
+			for (var child in tree_node['children']){
+				drawLine(x * rw + edge_offset, y * rh + edge_offset + radius, tree_node['children'][child]['x'] * rw + edge_offset, (y+1) * rh + edge_offset - radius);				
+				drawConn(tree_node['children'][child]);
+			}			
+		}
+		
+			function drawLine(startx, starty, endx, endy) {
+				context.beginPath();
+				context.moveTo(startx, starty);
+				context.lineTo(endx, endy);
+				context.stroke();
+			}
+{% endblock %}
+{% block content %}	
+	<canvas id="myCanvas" width="300" height="500"></canvas>	    
+{% endblock %}
