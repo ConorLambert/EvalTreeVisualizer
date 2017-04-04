@@ -25,13 +25,20 @@
 			</div>
 		</header>	
 		
-		<div class="container">		  	  
+		<div class="container" style="width:700px;">		  	  
 		  <button id="collapse-button" type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Enter Query</button>		  
 		  <div id="demo" class="collapse">
-			<section>			
-				<form method="post" action="{{ url_for('query') }}">					
-					<textarea id="query-input" name="query" rows="5" cols="100"></textarea>											
-				</form>
+			<section>	
+				<div id="query-area">
+					<h6 id="query-header">Presets</h3>
+					<div id="chevrons">
+						<a href="#" class="chevron-left">prev</a>
+						<a href="#" class="chevron-right">next</a>
+					</div>
+					<form id="query-form" method="post" action="{{ url_for('query') }}">					
+						<textarea id="query-input" name="query" rows="5" cols="100"></textarea>											
+					</form>
+				</div>
 			</section>
 		  </div>
 		</div>		

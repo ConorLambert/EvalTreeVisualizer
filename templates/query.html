@@ -5,7 +5,7 @@
 {%  endblock %}
 {% block scripting %}		
 		{% macro display(tree) %} {	
-			'text':'{{tree}}'.replace("&lt;","<").replace("&gt;",">"),
+			'text':'{{tree}}'.replace("&lt;","<").replace("&gt;",">").replace("&#39;","'").replace("&#39;","'"),
 			'x':{{tree.x}},
 			'y':{{tree.y}}{% if tree.children %},
 			'children':[{% for item in tree.children[:-1] %}{{ display(item) }},{% endfor %}	
@@ -72,8 +72,8 @@
 		
 		$(document).ready(function() {			
 			var actual_canvas_width = (right_leaf_node.x * rw) - (left_leaf_node.x * rw);
-			canvas.width = (actual_canvas_width * scale) + edge_offset + radius + 10;// * scale;
-			canvas.height = (left_leaf_node.y * rh + edge_offset + radius) + 20;  // $('#tree-container').height();
+			canvas.width = (actual_canvas_width * scale) + edge_offset + radius + 30;// * scale;
+			canvas.height = window.innerHeight; //(left_leaf_node.y * rh + edge_offset + radius) + 20;  // $('#tree-container').height();
 			context.scale(scale, scale);
 			context.lineWidth = lineWidth;
 			context.strokeStyle = "black";			
@@ -145,11 +145,11 @@
 		// functional operations
 		function calculateXPosition(x) {
 			return x * rw + edge_offset + 10;
-		}
-		
+		}		
 		function calculateYPosition(y) {
 			return y * rh + edge_offset; // + lineWidth;
 		}
+		
 {% endblock %}
 {% block content %}	
 	<canvas id="myCanvas" width="300" height="500"></canvas>	    

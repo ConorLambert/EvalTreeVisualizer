@@ -1,3 +1,13 @@
+#query-header {
+	text-align: left;
+	float:left;
+	margin-right: 5px;
+}
+
+#chevrons {
+	padding-top: 10px;
+}
+
 .container > h2 {
 	display: inline-block;
 }
@@ -5,7 +15,7 @@
 .container {
 	margin-top: 4px;
 	margin-bottom: 4px;
-	text-align: center;
+	text-align: center;	
 }
 
 #logo {
@@ -174,4 +184,52 @@ footer h3 {
 .symbol {
   background: blue;
   position: absolute;
+}
+
+[class^='chevron-'] {
+  float: left;
+  overflow: hidden;
+  height: 0;
+}
+
+.chevron-right:before, .chevron-right:after,
+.chevron-left:before, .chevron-left:after{
+  position: absolute;
+  content: '';
+  display: block;
+  width: 10px;
+  height: 3px;
+  background: #777;
+}
+.chevron-right:before, .chevron-right:after {
+  margin-left: 10px
+}
+.chevron-right:before {
+  -webkit-transform:rotate(45deg);
+  -moz-transform:rotate(45deg);
+  -ms-transform:rotate(45deg);
+  -o-transform:rotate(45deg);
+  transform:rotate(45deg);
+}
+.chevron-right:after {
+  -webkit-transform:rotate(-45deg) translateX(9px) translateY(-9px);
+  -moz-transform:rotate(-45deg) translateX(9px) translateY(-9px);
+  -ms-transform:rotate(-45deg) translateX(9px) translateY(-9px);
+  -o-transform:rotate(-45deg) translateX(9px) translateY(-9px);
+  transform:rotate(-45deg) translateX(9px) translateY(-9px);
+}
+
+.chevron-left:before {
+  -webkit-transform:rotate(-45deg);
+  -moz-transform:rotate(-45deg);
+  -ms-transform:rotate(-45deg);
+  -o-transform:rotate(-45deg);
+  transform:rotate(-45deg);
+}
+.chevron-left:after {
+  -webkit-transform:rotate(45deg) translateX(-9px) translateY(-9px);
+  -moz-transform:rotate(45deg) translateX(-9px) translateY(-9px);
+  -ms-transform:rotate(45deg) translateX(-9px) translateY(-9px);
+  -o-transform:rotate(45deg) translateX(-9px) translateY(-9px);
+  transform:rotate(45deg) translateX(-9px) translateY(-9px);
 }
