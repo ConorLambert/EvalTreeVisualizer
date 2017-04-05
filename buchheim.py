@@ -37,6 +37,9 @@ class DrawTree(object):
             self._lmost_sibling = self.parent.children[0]
         return self._lmost_sibling
     lmost_sibling = property(get_lmost_sibling)
+	
+    def serialize(self):
+        return { 'text':str(self.tree), 'x':self.x, 'y':self.y, 'children':[ item.serialize() for item in self.children ] }
 
     def __str__(self): return "%s" % (self.tree)
     def __repr__(self): return self.__str__()

@@ -4,7 +4,7 @@
 	<head>			
 		<meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>{% block title %}{% endblock %}</title>
+        <title>EvalTree Visualizer -- Welcome</title>
         <meta name="description" content="">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,7 +14,9 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>	
+		
 		<script src="{{ url_for('static', filename='js/app.js') }}"></script>	
+		<script src="{{ url_for('static', filename='js/tree.js') }}"></script>
 	</head>
 	
 	<body>	
@@ -35,7 +37,8 @@
 						<a href="#" class="chevron-left">prev</a>
 						<a href="#" class="chevron-right">next</a>
 					</div>
-					<form id="query-form" method="post" action="{{ url_for('query') }}">					
+					<h6 id="press-enter">(Press Enter To Submit)</h3>
+					<form id="query-form" method="post" action="">					
 						<textarea id="query-input" name="query" rows="5" cols="100"></textarea>											
 					</form>
 				</div>
@@ -47,24 +50,37 @@
 					
 		<div id="content">
 			<div class="innertube">	
+				<div id="query">
+				</div>
 				<div id="tree-container">
-					{%  block content %}
-					{%  endblock %}  		
+					<canvas id="myCanvas" width="300" height="500"></canvas>  		
 				</div>							
 			</div>		
-		</div> <!-- #main -->									
-		
-		<script>
-			{%  block scripting %}
-			{%  endblock %}  
-		</script>
-		
-		
+		</div> <!-- #main -->											
 		<footer id="footer">
 			<div class="innertube">
 				<h3>Evaluation Tree Visualizer by <a href="https://www.linkedin.com/in/conor-lambert-36936266/">Conor Lambert</a></h3>
 			</div>
 		</footer>
-	
+		<script>
+			$(document).ready(function() {
+				$('body').keypress(function (e) {
+				  if (e.which == 13) {	
+					$.ajax({
+							url: "{{ url_for('query') }}",
+							data: $('#query-form').serialize(),
+							type: 'POST',
+							success: function(response) {
+								plotDiagram(response);
+								$("#collapse-button").trigger('click');
+							},
+							error: function(error) {
+								console.log(error.responseText);
+							}
+						});				
+				}
+				return false;
+				})});  //<---- Add this line			  
+		</script>
 	</body>
 </html>

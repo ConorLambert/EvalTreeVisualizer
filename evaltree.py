@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for, abort
+from flask import Flask, render_template, jsonify, request, flash, redirect, url_for, abort
 from sqlparser import Parser
 from buchheim import buchheim
 
@@ -17,7 +17,8 @@ def query():
 	parser = Parser()	
 	tree = parser.execute(query)
 	drawTree = buchheim(tree)
-	return render_template('query.html', tree=drawTree)
+	return jsonify(drawTree.serialize())
+	#return jsonify(drawTree);
 
 @app.errorhandler(404)
 def page_not_found(e):
